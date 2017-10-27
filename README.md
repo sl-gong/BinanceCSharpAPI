@@ -1,7 +1,11 @@
 # BinanceCSharpAPI
 BinanceCSharpAPI is a lightweight client C# library for the Binance REST API
 
-Example
+Example 
+
+// dependence Newtonsoft.Json
+
+https://www.newtonsoft.com/json
 
 // api_key and secret_key can get from your binance account
 BinanceExchangeCSharp.BinanceCSharpAPI.setKey("your api key",
