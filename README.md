@@ -1,7 +1,7 @@
 # BinanceCSharpAPI
 BinanceCSharpAPI is a lightweight client C# library for the Binance REST API
 
-test code
+Example
 
 // api_key and secret_key can get from your binance account
 BinanceExchangeCSharp.BinanceCSharpAPI.setKey("your api key",
