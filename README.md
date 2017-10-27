@@ -16,9 +16,13 @@ BinanceExchangeCSharp.BinanceCSharpAPI.get_serverTime();
 BinanceExchangeCSharp.BinanceCSharpAPI.get_depth("BNBBTC", ref json_result);
 
 JObject depth = JObject.Parse(json_result);
+
 JArray bids = depth["bids"] as JArray;
+
 JToken bid0Price = bids[0][0];
+
 JToken bid0quantity = bids[0][1];
+
 JArray asks = depth["asks"] as JArray;
 
 BinanceExchangeCSharp.BinanceCSharpAPI.get_24hr("BNBBTC", ref json_result);
