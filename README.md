@@ -18,9 +18,11 @@ string json_result = "";
 BinanceExchangeCSharp.BinanceCSharpAPI.get_ping(ref json_result);
 
 // Get Server Time
+
 BinanceExchangeCSharp.BinanceCSharpAPI.get_serverTime();
 
 // Get Order book
+
 BinanceExchangeCSharp.BinanceCSharpAPI.get_depth("BNBBTC", ref json_result);
 
 JObject depth = JObject.Parse(json_result);
