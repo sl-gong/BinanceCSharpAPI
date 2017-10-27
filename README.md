@@ -8,6 +8,7 @@ BinanceExchangeCSharp.BinanceCSharpAPI.setKey("your api key",
 "your secret key");
 
 string json_result = "";
+
 BinanceExchangeCSharp.BinanceCSharpAPI.get_ping(ref json_result);
 
 BinanceExchangeCSharp.BinanceCSharpAPI.get_serverTime();
