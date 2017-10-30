@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Net;
 using System.IO;
 using System.Collections.Generic;
@@ -12,6 +12,11 @@ namespace BinanceExchangeCSharp
 {
     public class Common
     {
+        // log path
+        private static string _log_path = System.Environment.CurrentDirectory + "\\rest_api.log";
+
+        // log writer
+        private static StreamWriter _log_writer = null;
 
         public static long microsec_time()
         {
@@ -68,6 +73,30 @@ namespace BinanceExchangeCSharp
         {
             System.TimeSpan ts = DateTime.Now.TimeOfDay;
             return (ulong)ts.TotalMilliseconds;
+        }
+
+        /// <summary>
+        /// set log path
+        /// </summary>
+        /// <param name="logPath">set log </param>
+        public static void setLogPath(string logPath)
+        {
+            _log_path = logPath;
+            if (_log_writer != null)
+            {
+                _log_writer.Close();
+            }
+            _log_writer = File.AppendText(_log_path);
+        }
+
+        public static void writeLog(string logString)
+        {
+            if (_log_writer == null)
+            {
+                _log_writer = File.AppendText(_log_path);
+            }
+            _log_writer.WriteLine(logString);
+            _log_writer.Flush();
         }
     }
 }
