@@ -22,11 +22,7 @@ namespace BinanceExchangeCSharp
         
         // binance host
         private static string _binance_host = "https://www.binance.com";
-
-        // log path
-        private static string _log_path = System.Environment.CurrentDirectory + "\\rest_api.log";
-
-
+        
         /// <summary>
         /// Request by WebClient
         /// </summary>
@@ -117,7 +113,7 @@ namespace BinanceExchangeCSharp
         /// <param name="logPath">set log </param>
         public static void setLogPath(string logPath)
         {
-            _log_path = logPath;
+            Common.setLogPath(logPath);
         }
 
         /// <summary>
@@ -134,8 +130,7 @@ namespace BinanceExchangeCSharp
 	        }
 	        catch (Exception ex)
 	        {
-                StreamWriter logWriter = File.AppendText(_log_path);
-                logWriter.WriteLine("get_ping:" + ex.Message);
+                Common.writeLog("get_ping:" + ex.Message);             
 	        }
         }
 
@@ -160,8 +155,7 @@ namespace BinanceExchangeCSharp
             }
 	        catch (Exception ex)
 	        {
-                StreamWriter logWriter = File.AppendText(_log_path);
-                logWriter.WriteLine("get_serverTime:" + ex.Message);
+                Common.writeLog("get_serverTime:" + ex.Message);             
                 return 0;
 	        }
         }
@@ -187,9 +181,8 @@ namespace BinanceExchangeCSharp
                 publicRequest(url,ref json_result);
             }
             catch (Exception ex)
-            {
-                StreamWriter logWriter = File.AppendText(_log_path);
-                logWriter.WriteLine("get_depth:" + url + "\t" + ex.Message);
+            {                
+                Common.writeLog("get_depth:" + url + "\t" + ex.Message);             
             }
         }
 
@@ -240,8 +233,7 @@ namespace BinanceExchangeCSharp
             }
             catch (Exception ex)
             {
-                StreamWriter logWriter = File.AppendText(_log_path);
-                logWriter.WriteLine("get_aggTrades:" + strUrl + "\t" + ex.Message);
+                Common.writeLog("get_aggTrades:" + strUrl + "\t" + ex.Message);             
             }
         }
 
@@ -285,9 +277,8 @@ namespace BinanceExchangeCSharp
                 publicRequest(strURL.ToString(), ref json_result);
             }
             catch (Exception ex)
-            {
-                StreamWriter logWriter = File.AppendText(_log_path);
-                logWriter.WriteLine("get_klines:" + strURL + "\t" + ex.Message);
+            {                
+                Common.writeLog("get_klines:" + strURL + "\t" + ex.Message);             
             }
         }
 
@@ -307,9 +298,8 @@ namespace BinanceExchangeCSharp
                 publicRequest(url.ToString(), ref json_result);
             }
             catch (Exception ex)
-            {
-                StreamWriter logWriter = File.AppendText(_log_path);
-                logWriter.WriteLine("get_24hr:" + url + "\t" + ex.Message);
+            {                
+                Common.writeLog("get_24hr:" + url + "\t" + ex.Message);             
             }
         }
 
@@ -328,9 +318,8 @@ namespace BinanceExchangeCSharp
                 publicRequest(url.ToString(), ref json_result);
             }
             catch (Exception ex)
-            {
-                StreamWriter logWriter = File.AppendText(_log_path);
-                logWriter.WriteLine("get_allPrices:" + url + "\t" + ex.Message);
+            {                
+                Common.writeLog("get_allPrices:" + url + "\t" + ex.Message);             
             }
         }
 
@@ -349,9 +338,8 @@ namespace BinanceExchangeCSharp
                 publicRequest(url.ToString(), ref json_result);
             }
             catch (Exception ex)
-            {
-                StreamWriter logWriter = File.AppendText(_log_path);
-                logWriter.WriteLine("get_allBookTickers:" + url + "\t" + ex.Message);
+            {                
+                Common.writeLog("get_allBookTickers:" + url + "\t" + ex.Message);             
             }
         }
 
@@ -417,9 +405,8 @@ namespace BinanceExchangeCSharp
                 signedRequest(url, strQuery.ToString(), signature, "POST", ref json_result);
             }
             catch (Exception ex)
-            {
-                StreamWriter logWriter = File.AppendText(_log_path);
-                logWriter.WriteLine("post_order:" + url + "\t" + strQuery + "\t" + ex.Message);
+            {                
+                Common.writeLog("post_order:" + url + "\t" + strQuery + "\t" + ex.Message);             
             }            
         }
 
@@ -483,9 +470,8 @@ namespace BinanceExchangeCSharp
                 signedRequest(url, strQuery.ToString(), signature, "POST", ref json_result);
             }
             catch (Exception ex)
-            {
-                StreamWriter logWriter = File.AppendText(_log_path);
-                logWriter.WriteLine("post_order_test:" + url + "\t" + strQuery + "\t" + ex.Message);
+            {                
+                Common.writeLog("post_order_test:" + url + "\t" + strQuery + "\t" + ex.Message);             
             }
         }
 
@@ -542,9 +528,8 @@ namespace BinanceExchangeCSharp
                 signedRequest(url, strQuery.ToString(), signature, "GET", ref json_result);
             }
             catch (Exception ex)
-            {
-                StreamWriter logWriter = File.AppendText(_log_path);
-                logWriter.WriteLine("get_order:" + url + "\t" + strQuery + "\t" + ex.Message);
+            {                
+                Common.writeLog("get_order:" + url + "\t" + strQuery + "\t" + ex.Message);             
             }
         }
 
@@ -595,9 +580,8 @@ namespace BinanceExchangeCSharp
                 signedRequest(url, strQuery.ToString(), signature, "DELETE", ref json_result);
             }
             catch (Exception ex)
-            {
-                StreamWriter logWriter = File.AppendText(_log_path);
-                logWriter.WriteLine("delete_order:" + url + "\t" + strQuery + "\t" + ex.Message);
+            {                
+                Common.writeLog("delete_order:" + url + "\t" + strQuery + "\t" + ex.Message);             
             }
             
         }
@@ -632,9 +616,8 @@ namespace BinanceExchangeCSharp
                 signedRequest(url, strQuery.ToString(), signature, "GET", ref json_result);
             }
             catch (Exception ex)
-            {
-                StreamWriter logWriter = File.AppendText(_log_path);
-                logWriter.WriteLine("get_openOrders:" + url + "\t" + strQuery + "\t" + ex.Message);
+            {                
+                Common.writeLog("get_openOrders:" + url + "\t" + strQuery + "\t" + ex.Message);             
             }
             
         }
@@ -686,9 +669,8 @@ namespace BinanceExchangeCSharp
                 signedRequest(url, strQuery.ToString(), signature, "GET", ref json_result);
             }
             catch (Exception ex)
-            {
-                StreamWriter logWriter = File.AppendText(_log_path);
-                logWriter.WriteLine("get_allOrders:" + url + "\t" + strQuery + "\t" + ex.Message);
+            {                
+                Common.writeLog("get_allOrders:" + url + "\t" + strQuery + "\t" + ex.Message);             
             }
             
         }
@@ -741,8 +723,7 @@ namespace BinanceExchangeCSharp
             }
             catch (Exception ex)
             {
-                StreamWriter logWriter = File.AppendText(_log_path);
-                logWriter.WriteLine("get_myTrades:" + url + "\t" + strQuery + "\t" + ex.Message);
+                Common.writeLog("get_myTrades:" + url + "\t" + strQuery + "\t" + ex.Message);
             }
             
         }
@@ -773,9 +754,8 @@ namespace BinanceExchangeCSharp
                 signedRequest(url, strQuery.ToString(), signature, "GET", ref json_result);
             }
             catch (Exception ex)
-            {
-                StreamWriter logWriter = File.AppendText(_log_path);
-                logWriter.WriteLine("get_account:" + url + "\t" + strQuery + "\t" + ex.Message);
+            {                
+                Common.writeLog("get_account:" + url + "\t" + strQuery + "\t" + ex.Message);                
             }
         }
     }
