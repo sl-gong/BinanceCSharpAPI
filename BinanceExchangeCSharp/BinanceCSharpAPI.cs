@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Net;
 using System.IO;
 using System.Collections.Generic;
@@ -17,10 +17,15 @@ namespace BinanceExchangeCSharp
     {
         // API-keys, and secret-keys are case sensitive
         private static string _api_key = "";
-
+                
         private static string _secret_key = "";
-
+        
+        // binance host
         private static string _binance_host = "https://www.binance.com";
+
+        // log path
+        private static string _log_path = System.Environment.CurrentDirectory + "\\rest_api.log";
+
 
         /// <summary>
         /// Request by WebClient
@@ -107,14 +112,31 @@ namespace BinanceExchangeCSharp
         }
 
         /// <summary>
+        /// set log path
+        /// </summary>
+        /// <param name="logPath">set log </param>
+        public static void setLogPath(string logPath)
+        {
+            _log_path = logPath;
+        }
+
+        /// <summary>
         /// Test connectivity to the Rest API.
         /// GET /api/v1/ping
         /// </summary>
         /// <param name="json_result">return json string</param>
         public static void get_ping(ref string json_result)
         {
-            string url = _binance_host + "/api/v1/ping";
-            publicRequest(url, ref json_result);
+            try 
+	        {
+                string url = _binance_host + "/api/v1/ping";
+                publicRequest(url, ref json_result);
+	        }
+	        catch (Exception ex)
+	        {
+                StreamWriter logWriter = File.AppendText(_log_path);
+                logWriter.WriteLine("get_ping:" + ex.Message);
+	        }
         }
 
         /// <summary>
@@ -124,15 +146,24 @@ namespace BinanceExchangeCSharp
         /// <param name="json_result">return json string</param>
         public static long get_serverTime()
         {
-            string url = _binance_host + "/api/v1/time";
+            try
+            {
+                string url = _binance_host + "/api/v1/time";
 
-            string json_result = "";
-            publicRequest(url, ref json_result);
+                string json_result = "";
+                publicRequest(url, ref json_result);
 
-            int pos1 = json_result.LastIndexOf('}');
-            int pos2 = json_result.LastIndexOf(':');
-            string timeStr = json_result.Substring(pos2 + 1, pos1 - pos2 - 1);
-            return long.Parse(timeStr);
+                int pos1 = json_result.LastIndexOf('}');
+                int pos2 = json_result.LastIndexOf(':');
+                string timeStr = json_result.Substring(pos2 + 1, pos1 - pos2 - 1);
+                return long.Parse(timeStr);
+            }
+	        catch (Exception ex)
+	        {
+                StreamWriter logWriter = File.AppendText(_log_path);
+                logWriter.WriteLine("get_serverTime:" + ex.Message);
+                return 0;
+	        }
         }
 
         /// <summary>
@@ -147,12 +178,19 @@ namespace BinanceExchangeCSharp
             ref string json_result,
             int limit = 100)
         {
-            publicRequest(
-                string.Format("{0}/api/v1/depth?symbol={1}&limit={2}", 
-                _binance_host, 
-                symbol, 
-                limit), 
-                ref json_result);
+            string url = string.Format("{0}/api/v1/depth?symbol={1}&limit={2}",
+                    _binance_host,
+                    symbol,
+                    limit);
+            try
+            {
+                publicRequest(url,ref json_result);
+            }
+            catch (Exception ex)
+            {
+                StreamWriter logWriter = File.AppendText(_log_path);
+                logWriter.WriteLine("get_depth:" + url + "\t" + ex.Message);
+            }
         }
 
         /// <summary>
@@ -196,7 +234,15 @@ namespace BinanceExchangeCSharp
                 strUrl.AppendFormat("&limit={0}", limit);
             }
 
-            publicRequest(strUrl.ToString(), ref json_result);
+            try
+            {
+                publicRequest(strUrl.ToString(), ref json_result);
+            }
+            catch (Exception ex)
+            {
+                StreamWriter logWriter = File.AppendText(_log_path);
+                logWriter.WriteLine("get_aggTrades:" + strUrl + "\t" + ex.Message);
+            }
         }
 
         /// <summary>
@@ -234,7 +280,15 @@ namespace BinanceExchangeCSharp
                 strURL.AppendFormat("&limit={0}", limit);
             }
 
-            publicRequest(strURL.ToString(), ref json_result);
+            try
+            {
+                publicRequest(strURL.ToString(), ref json_result);
+            }
+            catch (Exception ex)
+            {
+                StreamWriter logWriter = File.AppendText(_log_path);
+                logWriter.WriteLine("get_klines:" + strURL + "\t" + ex.Message);
+            }
         }
 
         /// <summary>
@@ -248,7 +302,15 @@ namespace BinanceExchangeCSharp
         {
             string url = _binance_host + "/api/v1/ticker/24hr?symbol=" + symbol;
 
-            publicRequest(url, ref json_result);
+            try
+            {
+                publicRequest(url.ToString(), ref json_result);
+            }
+            catch (Exception ex)
+            {
+                StreamWriter logWriter = File.AppendText(_log_path);
+                logWriter.WriteLine("get_24hr:" + url + "\t" + ex.Message);
+            }
         }
 
         /// <summary>
@@ -261,7 +323,15 @@ namespace BinanceExchangeCSharp
         {
             string url = _binance_host + "/api/v1/ticker/allPrices";
 
-            publicRequest(url, ref json_result);
+            try
+            {
+                publicRequest(url.ToString(), ref json_result);
+            }
+            catch (Exception ex)
+            {
+                StreamWriter logWriter = File.AppendText(_log_path);
+                logWriter.WriteLine("get_allPrices:" + url + "\t" + ex.Message);
+            }
         }
 
         /// <summary>
@@ -274,7 +344,15 @@ namespace BinanceExchangeCSharp
         {
             string url = _binance_host + "/api/v1/ticker/allBookTickers";
 
-            publicRequest(url, ref json_result);
+            try
+            {
+                publicRequest(url.ToString(), ref json_result);
+            }
+            catch (Exception ex)
+            {
+                StreamWriter logWriter = File.AppendText(_log_path);
+                logWriter.WriteLine("get_allBookTickers:" + url + "\t" + ex.Message);
+            }
         }
 
         //---------------------------------Account endpoints---------------------------------
@@ -334,7 +412,15 @@ namespace BinanceExchangeCSharp
 
             string signature = Common.hash_hmac(strQuery.ToString(), _secret_key);
 
-            signedRequest(url, strQuery.ToString(), signature, "POST", ref json_result);
+            try
+            {
+                signedRequest(url, strQuery.ToString(), signature, "POST", ref json_result);
+            }
+            catch (Exception ex)
+            {
+                StreamWriter logWriter = File.AppendText(_log_path);
+                logWriter.WriteLine("post_order:" + url + "\t" + strQuery + "\t" + ex.Message);
+            }            
         }
 
         /// <summary>
@@ -392,7 +478,15 @@ namespace BinanceExchangeCSharp
 
             string signature = Common.hash_hmac(strQuery.ToString(), _secret_key);
 
-            signedRequest(url, strQuery.ToString(), signature, "POST", ref json_result);
+            try
+            {
+                signedRequest(url, strQuery.ToString(), signature, "POST", ref json_result);
+            }
+            catch (Exception ex)
+            {
+                StreamWriter logWriter = File.AppendText(_log_path);
+                logWriter.WriteLine("post_order_test:" + url + "\t" + strQuery + "\t" + ex.Message);
+            }
         }
 
         /// <summary>
@@ -443,7 +537,15 @@ namespace BinanceExchangeCSharp
 
             string signature = Common.hash_hmac(strQuery.ToString(), _secret_key);
 
-            signedRequest(url, strQuery.ToString(), signature, "GET", ref json_result);
+            try
+            {
+                signedRequest(url, strQuery.ToString(), signature, "GET", ref json_result);
+            }
+            catch (Exception ex)
+            {
+                StreamWriter logWriter = File.AppendText(_log_path);
+                logWriter.WriteLine("get_order:" + url + "\t" + strQuery + "\t" + ex.Message);
+            }
         }
 
         /// <summary>
@@ -488,7 +590,16 @@ namespace BinanceExchangeCSharp
 
             string signature = Common.hash_hmac(strQuery.ToString(), _secret_key);
 
-            signedRequest(url, strQuery.ToString(), signature, "DELETE", ref json_result);
+            try
+            {
+                signedRequest(url, strQuery.ToString(), signature, "DELETE", ref json_result);
+            }
+            catch (Exception ex)
+            {
+                StreamWriter logWriter = File.AppendText(_log_path);
+                logWriter.WriteLine("delete_order:" + url + "\t" + strQuery + "\t" + ex.Message);
+            }
+            
         }
 
         /// <summary>
@@ -516,7 +627,16 @@ namespace BinanceExchangeCSharp
 
             string signature = Common.hash_hmac(strQuery.ToString(), _secret_key);
 
-            signedRequest(url, strQuery.ToString(), signature, "GET", ref json_result);
+            try
+            {
+                signedRequest(url, strQuery.ToString(), signature, "GET", ref json_result);
+            }
+            catch (Exception ex)
+            {
+                StreamWriter logWriter = File.AppendText(_log_path);
+                logWriter.WriteLine("get_openOrders:" + url + "\t" + strQuery + "\t" + ex.Message);
+            }
+            
         }
 
         /// <summary>
@@ -561,7 +681,16 @@ namespace BinanceExchangeCSharp
 
             string signature = Common.hash_hmac(strQuery.ToString(), _secret_key);
 
-            signedRequest(url, strQuery.ToString(), signature, "GET", ref json_result);
+            try
+            {
+                signedRequest(url, strQuery.ToString(), signature, "GET", ref json_result);
+            }
+            catch (Exception ex)
+            {
+                StreamWriter logWriter = File.AppendText(_log_path);
+                logWriter.WriteLine("get_allOrders:" + url + "\t" + strQuery + "\t" + ex.Message);
+            }
+            
         }
 
         /// <summary>
@@ -606,7 +735,16 @@ namespace BinanceExchangeCSharp
 
             string signature = Common.hash_hmac(strQuery.ToString(), _secret_key);
 
-            signedRequest(url, strQuery.ToString(), signature, "GET", ref json_result);
+            try
+            {
+                signedRequest(url, strQuery.ToString(), signature, "GET", ref json_result);
+            }
+            catch (Exception ex)
+            {
+                StreamWriter logWriter = File.AppendText(_log_path);
+                logWriter.WriteLine("get_myTrades:" + url + "\t" + strQuery + "\t" + ex.Message);
+            }
+            
         }
 
         /// <summary>
@@ -630,7 +768,15 @@ namespace BinanceExchangeCSharp
 
             string signature = Common.hash_hmac(strQuery.ToString(), _secret_key);
 
-            signedRequest(url, strQuery.ToString(), signature, "GET", ref json_result);
+            try
+            {
+                signedRequest(url, strQuery.ToString(), signature, "GET", ref json_result);
+            }
+            catch (Exception ex)
+            {
+                StreamWriter logWriter = File.AppendText(_log_path);
+                logWriter.WriteLine("get_account:" + url + "\t" + strQuery + "\t" + ex.Message);
+            }
         }
     }
     
